@@ -1,87 +1,92 @@
-import React, {useState} from 'react';
-import {useHistory} from 'react-router-dom';
-import {auth} from "../../config/firebase";
+import React, {useEffect, useState} from 'react';
+import {Link, useHistory} from 'react-router-dom';
+import {auth} from "../config/firebase";
 import styled from "styled-components";
-
-//
-// const StyledButton = ( ) => {
-//     const Button = styled.button`
-//       background: black;
-//       color: white;
-//       border-radius: 7px;
-//       padding: 20px;
-//       margin: 10px;
-//       font-size: 16px;
-//       :disabled {
-//         opacity: 0.4;
-//       }
-//       :hover {
-//         box-shadow: 0 0 10px yellow;
-//       }
-//     `;
-//
-//
-//     const Wrapper = styled.section`
-//   padding: 4em;
-//   background: papayawhip;
-// `;
-//
-//     return (
-//
-//     <Button>
-//         Hello
-//     </Button>
-//
-//
-//     )
-// }
+import {InputStyled, PasswordStyled} from "./parts/InputStyled/InputStyled";
+import SignInButton from "./parts/ButtonStyled/ButtonStyled";
+import {FormWrapper, WrapperRegister} from "./RegisterPage";
+import Cookies from "js-cookie";
+import SignInWithGoogle from "./parts/MediaSignIn/GoogleSignIn";
+import Snipper1 from "../other/spinner1";
+import {useAppDispatch} from "../app/hooks";
+import {adminStatus} from '../features/userStatus/userSlice';
 
 
+const Styledh3 = styled.h3`
+  font-family: Roboto;
+
+`
+export const LinkAuth = styled(Link).attrs(props => ({
+    to: props.to ? props.to : '/'
+}))``
 
 
 const LoginPage: React.FC = (props) => {
     const [autent, setAutent] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('')
     const [passsword, setPassword] = useState<string>('')
-    const [confirm, setConfirm] = useState<string>('')
     const [error, setError] = useState<string>('')
+    const dispatch = useAppDispatch();
 
     const history = useHistory();
-
     const singInWithEmailAndPassword = () => {
+        auth.signOut()
         setAutent(true)
-
         auth.signInWithEmailAndPassword(email, passsword).then(result => {
-            // history.push('/login')
-            console.log('result',result);
+            if (result.operationType === 'signIn') {
+                if (result.user?.uid) {
+                    result.user.uid === 'qpGDtsAF0lheakZQj2rXopqda8S2' ? dispatch(adminStatus(true))
+                        :
+                        dispatch(adminStatus(false))
+                }
+                setError('');
+                history.push('/usercab')
+            }
 
         }).catch(e => {
-            console.log( 'err',e);
+            console.log('err', e);
+            setAutent(false);
+            setError(e.message)
         })
     }
-    console.log('current User',auth.currentUser?.updateProfile)
+
+    const handleSumbmit = (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        singInWithEmailAndPassword()
+        // console.log('Done')
+        // Cookies.set('isClient', 'true');
+
+    }
 
     return (
         <>
+            {autent ?
+                <> <Snipper1/></>
+                :
+                <>
+                    <Styledh3>Log In Page </Styledh3>
+                    <WrapperRegister>
+                        <FormWrapper action="#" onSubmit={handleSumbmit}>
+                            <InputStyled margin={'5px'}
+                                         onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setEmail(e.target.value)}
+                                         type="text" id={'email'}/>
+                            <PasswordStyled
+                                type={'password'}
+                                onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setPassword(e.target.value)}
+                                id={'password'}/>
 
-            <p>register Page </p>
-            <form action="#" onSubmit={(e)=>e.preventDefault()}>
-                <div>
-                    <label htmlFor="email">Email</label>
-                    <input onChange={(e)=> setEmail(e.target.value)} type="text" id={'email'}/>
-                </div>
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input onChange={(e)=> setPassword(e.target.value)} type="text" id={'password'}/>
-
-                </div>
-                <button
-                    // disabled={registering}
-                    onClick={()=> singInWithEmailAndPassword()}
-                >Sing In</button>
-
-
-            </form>
+                            <SignInButton primary={'black'}
+                            >Sign In
+                            </SignInButton>
+                            <SignInWithGoogle/>
+                        </FormWrapper>
+                        <LinkAuth>
+                            Dont have an acc ?
+                        </LinkAuth>
+                        {error.length ? <div>{error}</div> : ''}
+                    </WrapperRegister>
+                </>
+            }
         </>
     )
 }

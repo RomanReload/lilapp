@@ -5,9 +5,10 @@ import config from '../config/config';
 
 const Firebase = firebase.initializeApp(config.firebase);
 
-export const Providers = {
-    google: new firebase.auth.GoogleAuthProvider()
-}
+// export const Providers = {
+//     google: new firebase.auth.GoogleAuthProvider()
+// }
 
 export const auth = firebase.auth();
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
 export default Firebase;
