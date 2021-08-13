@@ -10,13 +10,14 @@ const ArticleWrapper = styled.main.attrs(props => {
   justify-content: flex-start;
   align-items: flex-start;
   //background-color: indianred;
-  width: 1108px;
+  min-width: 1140px;
   border-bottom:1px solid #C2C3C7;
 `;
 
 const TextContent = styled.p.attrs(props => {
 
 })`
+  //display: block;
   font-family: Roboto,serif;
   font-style: normal;
   margin: ${(props) => props.m ? props.m : '0px 0px 0px 0px'};
@@ -24,8 +25,7 @@ const TextContent = styled.p.attrs(props => {
   font-size: ${props => props.fontS ? props.fontS : '14px'};
   font-weight: ${props => props.fontW ? props.fontW : '500'};
   text-align: start;
-
-  width: 1108px;
+  min-width: 100%;
 `;
 
 

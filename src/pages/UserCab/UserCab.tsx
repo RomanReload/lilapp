@@ -1,13 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {auth} from '../../config/firebase';
-import ArticleBlock from "./ArticleBlock";
 import firebase from "firebase/app";
 import {useHistory} from "react-router-dom";
-import {IonIcon} from '@ionic/react';
 import {LinkStyled, NavWrapper, PageWrapper, StyledImg, StyledTitle} from "./styled";
 import {useAppSelector} from "../../app/hooks";
+import ChunkedPage from "./chunkPages/ChunkPage";
+import {arrowForward, searchCircle, searchCircleOutline} from 'ionicons/icons';
+import {IonButton, IonIcon} from "@ionic/react";
+import SearcherPosts from "./Searcher";
 
-interface Iposts {
+
+
+export interface Iposts {
     title: string;
     time: number;
     id: string;
@@ -41,7 +45,10 @@ const UserCab: React.FC = () => {
     const history = useHistory();
     const postFromFirebase = 'posts';
     const isAdmin = useAppSelector(state => state.clientStatus.isAdmin);
-    console.log(isAdmin)
+    // console.log(isAdmin)
+
+
+
 
 
         useEffect
@@ -78,11 +85,11 @@ const UserCab: React.FC = () => {
 
     return (
         <PageWrapper>
+
             <NavWrapper>
                 <StyledTitle>LilBlog</StyledTitle>
-
+                <SearcherPosts/>
                 <div style={{display: 'flex'}}>
-
                     {isAdmin
                         ? <LinkStyled onClick={handleAdminRoom} href="#">
                         <StyledImg m={'25px'}
@@ -90,19 +97,13 @@ const UserCab: React.FC = () => {
                                    alt={'#'}/>
                     </LinkStyled>
                     : null}
-
                     <LinkStyled onClick={handleClickLogOut} href="#">
                         <StyledImg m={'25px'} src="https://cdn.iconscout.com/icon/free/png-256/logout-36-432839.png"
                                    alt={'#'}/>
                     </LinkStyled>
                 </div>
             </NavWrapper>
-            {posts.map(item => {
-                const {title, content, time, id} = item;
-                return (
-                    <ArticleBlock key={id} time={time} text={title} secondText={content}/>
-                )
-            })}
+            <ChunkedPage posts={posts}/>
         </PageWrapper>
 
     )

@@ -5,7 +5,7 @@ export const PageWrapper = styled.div`
   flex-direction: column;
   background-color: black;
   align-items: center;
-  min-width: 100%;
+  min-width: 80%;
   min-height: 100vh;
 `;
 export const NavWrapper = styled.nav`
@@ -20,6 +20,9 @@ export const NavWrapper = styled.nav`
 
 export const StyledTitle = styled.h2`
   color: white;
+  flex: 1;
+  text-align: start;
+  
 `
 type Isvg = {
     m: string;

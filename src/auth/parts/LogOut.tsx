@@ -18,8 +18,6 @@ const LoginPage: React.FC = (props) => {
         setAutent(true)
 
         auth.signInWithEmailAndPassword(email, passsword).then(result => {
-            // history.push('/login')
-            console.log('result',result);
 
         }).catch(e => {
             console.log( 'err',e);
@@ -27,7 +25,7 @@ const LoginPage: React.FC = (props) => {
     }
 
 
-    console.log('current User',auth.currentUser?.updateProfile)
+    // console.log('current User',auth.currentUser?.updateProfile)
 
     return (
         <>

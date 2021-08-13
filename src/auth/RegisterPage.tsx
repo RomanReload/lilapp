@@ -52,7 +52,7 @@ const RegisterPage: React.FC = (props) => {
 
 
         auth.createUserWithEmailAndPassword(email, password).then(result => {
-            console.log('result', result);
+
             if(result.operationType === 'signIn') {
 
                 if (result.user?.uid) {
